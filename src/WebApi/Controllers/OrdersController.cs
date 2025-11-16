@@ -5,6 +5,8 @@ namespace WebApi.Controllers
 {
     public class OrdersController /* No ControllerBase, no attributes: unused on purpose */ 
     {
-        public string DoNothing() => "This controller does nothing. Endpoints are in Program.cs";
+        private const string DoNothingMessage = "This controller does nothing. Endpoints are in Program.cs";
+
+        public string GetMessage() => DoNothingMessage;
     }
 }

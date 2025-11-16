@@ -7,18 +7,11 @@ namespace Infrastructure.Data
 {
     public static class BadDb
     {
-        public static readonly string ConnectionString;
-
-        static BadDb()
-        {
-            var builder = new ConfigurationBuilder()
-                .SetBasePath(AppContext.BaseDirectory)
-                .AddJsonFile("appsettings.json");
-
-            var configuration = builder.Build();
-            ConnectionString = configuration.GetConnectionString("Sql");
-        }
-
+        public static readonly string ConnectionString = new ConfigurationBuilder()
+            .SetBasePath(AppContext.BaseDirectory)
+            .AddJsonFile("appsettings.json")
+            .Build()
+            .GetConnectionString("Sql");
         public static int ExecuteNonQueryUnsafe(string sql)
         {
             using var conn = new SqlConnection(ConnectionString);
