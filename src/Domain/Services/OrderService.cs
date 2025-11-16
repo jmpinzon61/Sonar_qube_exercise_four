@@ -1,19 +1,24 @@
 using System;
 using System.Collections.Generic;
 
-namespace Domain.Services;
-
-using Domain.Entities;
-
-public static class OrderService
+namespace Domain.Services
 {
-    public static List<Order> LastOrders = new List<Order>();
-
-    public static Order CreateTerribleOrder(string customer, string product, int qty, decimal price)
+    using Domain.Entities;
+    public static class OrderService
     {
-        var o = new Order { Id = new Random().Next(1, 9999999), CustomerName = customer, ProductName = product, Quantity = qty, UnitPrice = price };
-        LastOrders.Add(o);
-        Infrastructure.Logging.Logger.Log("Created order " + o.Id + " for " + customer);
-        return o;
+        private static List<Order> LastOrders = new List<Order>();
+
+        public static IReadOnlyList<Order> GetLastOrders()
+        {
+            return LastOrders.AsReadOnly();
+        }
+
+        public static Order CreateTerribleOrder(string customer, string product, int qty, decimal price)
+        {
+            var o = new Order { Id = new Random().Next(1, 9999999), CustomerName = customer, ProductName = product, Quantity = qty, UnitPrice = price };
+            LastOrders.Add(o);
+            Infrastructure.Logging.Logger.Log("Created order " + o.Id + " for " + customer);
+            return o;
+        }
     }
 }

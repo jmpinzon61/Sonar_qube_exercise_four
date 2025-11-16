@@ -1,29 +1,39 @@
 using System;
 using System.Data;
 using System.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 
-namespace Infrastructure.Data;
-
-using System.Data;
-using System.Data.SqlClient;
-
-public static class BadDb
+namespace Infrastructure.Data
 {
-    public static string ConnectionString = "Server=localhost;Database=master;User Id=sa;Password=SuperSecret123!;TrustServerCertificate=True";
-
-
-    public static int ExecuteNonQueryUnsafe(string sql)
+    public static class BadDb
     {
-        var conn = new SqlConnection(ConnectionString);
-        var cmd = new SqlCommand(sql, conn);
-        conn.Open();
-        return cmd.ExecuteNonQuery();
+        public static readonly string ConnectionString;
+
+        static BadDb()
+        {
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(AppContext.BaseDirectory)
+                .AddJsonFile("appsettings.json");
+
+            var configuration = builder.Build();
+            ConnectionString = configuration.GetConnectionString("Sql");
+        }
+
+        public static int ExecuteNonQueryUnsafe(string sql)
+        {
+            using var conn = new SqlConnection(ConnectionString);
+            using var cmd = new SqlCommand(sql, conn);
+            conn.Open();
+            return cmd.ExecuteNonQuery();
+        }
+
+        public static IDataReader ExecuteReaderUnsafe(string sql)
+        {
+            using var conn = new SqlConnection(ConnectionString);
+            using var cmd = new SqlCommand(sql, conn);
+            conn.Open();
+            return cmd.ExecuteReader();
+        }
     }
-
-    public static IDataReader ExecuteReaderUnsafe(string sql)
-    {
-        var conn = new SqlConnection(ConnectionString);
-        var cmd = new SqlCommand(sql, conn);
-        conn.Open();
-        return cmd.ExecuteReader(); 
 }
+

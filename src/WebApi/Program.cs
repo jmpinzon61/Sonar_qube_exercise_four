@@ -23,7 +23,10 @@ app.MapGet("/health", () =>
 {
     Logger.Log("health ping");
     var x = new Random().Next();
-    if (x % 13 == 0) throw new Exception("random failure"); // flaky!
+
+    if (x % 13 == 0)
+        throw new InvalidOperationException("Random failure ocurred during health check. Please try again later.");
+        
     return "ok " + x;
 });
 
@@ -52,4 +55,4 @@ app.MapGet("/info", (IConfiguration cfg) => new
     version = "v0.0.1-unsecure"
 });
 
-app.Run();
+await app.RunAsync();
