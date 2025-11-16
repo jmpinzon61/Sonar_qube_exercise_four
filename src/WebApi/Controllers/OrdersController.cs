@@ -7,6 +7,6 @@ namespace WebApi.Controllers
     {
         private const string DoNothingMessage = "This controller does nothing. Endpoints are in Program.cs";
 
-        public string GetMessage() => DoNothingMessage;
+        public static string GetMessage() => DoNothingMessage;
     }
 }
